@@ -19,8 +19,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flute_music_player: ^0.0.6
-  percent_indicator: ^2.1.1+1
+  flute_music_player:
   flutter_launcher_icons: ^0.7.4
 
 

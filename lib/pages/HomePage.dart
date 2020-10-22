@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flute_music_player/flute_music_player.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../main.dart';
 
@@ -26,7 +25,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   Duration duration;
   Duration position;
 
@@ -49,22 +47,19 @@ class _MyHomePageState extends State<MyHomePage> {
     fetchSongs();
   }
 
-  searchMusiques(String search)
-  {
-    while(displayedSongs.isNotEmpty){displayedSongs.removeLast();}
-    if(search.isNotEmpty)
-    {
-        songs.forEach((element) {
-          if(element.title.toLowerCase().startsWith(search.toLowerCase()))
-          {
-            setState(() {
-              displayedSongs.add(element);
-            });
-          }
-        });
+  searchMusiques(String search) {
+    while (displayedSongs.isNotEmpty) {
+      displayedSongs.removeLast();
     }
-    else
-    {
+    if (search.isNotEmpty) {
+      songs.forEach((element) {
+        if (element.title.toLowerCase().startsWith(search.toLowerCase())) {
+          setState(() {
+            displayedSongs.add(element);
+          });
+        }
+      });
+    } else {
       fetchSongs();
     }
   }
@@ -93,12 +88,12 @@ class _MyHomePageState extends State<MyHomePage> {
       _isSearching = true;
     });
     try {
-      songs = await MusicFinder.allSongs().whenComplete((){
+      songs = await MusicFinder.allSongs().whenComplete(() {
         setState(() {
           _isSearching = false;
         });
       });
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
     }
   }
@@ -109,178 +104,195 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  AppBar myCustomAppBar(BuildContext context)
-  {
+  AppBar myCustomAppBar(BuildContext context) {
     return AppBar(
-        title: const Text('Dodo Musique'),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: TextField(
-                onChanged: (value){
-                  searchMusiques(value);
-                },
-                controller: musicTitleController,
-                decoration: InputDecoration(
+      title: const Text('Dodo Musique'),
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: TextField(
+              onChanged: (value) {
+                searchMusiques(value);
+              },
+              controller: musicTitleController,
+              decoration: InputDecoration(
                   labelText: "Rechercher une musique",
                   hintText: "Rechercher une musique...",
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25))
-                  )
-                ),
-              ),
+                      borderRadius: BorderRadius.all(Radius.circular(25)))),
             ),
           ),
         ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if(_isSearching == true)
-    {
+    if (_isSearching == true) {
       return Container(
         child: Center(
           child: CircularProgressIndicator(),
         ),
       );
-    }
-    else
-    {
-      if(displayedSongs.length != 0)
-      {
+    } else {
+      if (displayedSongs.length != 0) {
         return Material(
           child: Scaffold(
-            backgroundColor: Colors.black54,
-            appBar: myCustomAppBar(context),
-            body: Container(
-              child: ListView.builder(
-                itemCount: displayedSongs.length,
-                itemBuilder: (BuildContext context, int index){
-                  return GestureDetector(
-                    onTap: (){
-                      showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CupertinoAlertDialog(
-                          title: Text("${displayedSongs[index].title}"),
-                          content: Text(''),
-                          actions: <Widget>[
-                            FlatButton(
-                              onPressed: (){
-                                _playLocal(displayedSongs[index].uri);
-                              },
-                              child: Text("PLAY"),
+              backgroundColor: Colors.black54,
+              appBar: myCustomAppBar(context),
+              body: Container(
+                child: ListView.builder(
+                    itemCount: displayedSongs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoAlertDialog(
+                                title: Text("${displayedSongs[index].title}"),
+                                content: Text(''),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    onPressed: () {
+                                      _playLocal(displayedSongs[index].uri);
+                                    },
+                                    child: Text("PLAY"),
+                                  ),
+                                  FlatButton(
+                                      onPressed: () {
+                                        pause();
+                                      },
+                                      child: Text("PAUSE")),
+                                  FlatButton(
+                                    onPressed: () {
+                                      stop();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("STOP"),
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                          _playLocal(displayedSongs[index].uri);
+                        },
+                        child: Card(
+                          color: matBlack,
+                          elevation: 1,
+                          child: SizedBox(
+                            height: 50,
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  displayedSongs[index].title,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                displayedSongs[index].artist != "<unknown>"
+                                    ? Text(
+                                        "${displayedSongs[index].artist}",
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 127, 127, 127)),
+                                      )
+                                    : Text(
+                                        "Artiste inconnu",
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 127, 127, 127)),
+                                      )
+                              ],
                             ),
-                            FlatButton(
-                              onPressed: () {
-                                pause();
-                              },
-                              child: Text("PAUSE")
-                            ),
-                            FlatButton(
-                              onPressed: () {
-                                stop();
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("STOP"),
-                            )
-                          ],
-                        );
-                      },
-                    );
-                    _playLocal(displayedSongs[index].uri);
-                    },
-                    child: Card(
-                      color: matBlack,
-                      elevation: 1,
-                      child: SizedBox(
-                        height: 50,
-                        child: Column(
-                          children: <Widget>[
-                            Text(displayedSongs[index].title, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white),),
-                            displayedSongs[index].artist != "<unknown>" ? Text("${displayedSongs[index].artist}",style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)),) : Text("Artiste inconnu",style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)),)
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }
-              ),
-            )
-          ),
+                      );
+                    }),
+              )),
         );
-      }
-      else
-      {
+      } else {
         return Material(
           child: Scaffold(
-            backgroundColor: Colors.black54,
-            appBar: myCustomAppBar(context),
-            body: Container(
-              child: ListView.builder(
-                itemCount: songs.length,
-                itemBuilder: (BuildContext context, int index){
-                  return GestureDetector(
-                    onTap: (){
-                      showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CupertinoAlertDialog(
-                          title: Text("${songs[index].title}"),
-                          content: Text(''),
-                          actions: <Widget>[
-                            FlatButton(
-                              onPressed: (){
-                                _playLocal(songs[index].uri);
-                              },
-                              child: Text("PLAY"),
+              backgroundColor: Colors.black54,
+              appBar: myCustomAppBar(context),
+              body: Container(
+                child: ListView.builder(
+                    itemCount: songs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoAlertDialog(
+                                title: Text("${songs[index].title}"),
+                                content: Text(''),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    onPressed: () {
+                                      _playLocal(songs[index].uri);
+                                    },
+                                    child: Text("PLAY"),
+                                  ),
+                                  FlatButton(
+                                      onPressed: () {
+                                        pause();
+                                      },
+                                      child: Text("PAUSE")),
+                                  FlatButton(
+                                    onPressed: () {
+                                      stop();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("STOP"),
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                          _playLocal(songs[index].uri);
+                        },
+                        child: Card(
+                          color: matBlack,
+                          elevation: 1,
+                          child: SizedBox(
+                            height: 50,
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  songs[index].title,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                songs[index].artist != "<unknown>"
+                                    ? Text(
+                                        "${songs[index].artist}",
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 127, 127, 127)),
+                                      )
+                                    : Text(
+                                        "Artiste inconnu",
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 127, 127, 127)),
+                                      )
+                              ],
                             ),
-                            FlatButton(
-                              onPressed: () {
-                                pause();
-                              },
-                              child: Text("PAUSE")
-                            ),
-                            FlatButton(
-                              onPressed: () {
-                                stop();
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("STOP"),
-                            )
-                          ],
-                        );
-                      },
-                    );
-                    _playLocal(songs[index].uri);
-                    },
-                    child: Card(
-                      color: matBlack,
-                      elevation: 1,
-                      child: SizedBox(
-                        height: 50,
-                        child: Column(
-                          children: <Widget>[
-                            Text(songs[index].title, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white),),
-                            songs[index].artist != "<unknown>" ? Text("${songs[index].artist}",style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)),) : Text("Artiste inconnu",style: TextStyle(color: Color.fromARGB(255, 127, 127, 127)),)
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }
-              ),
-            )
-          ),
+                      );
+                    }),
+              )),
         );
       }
     }
