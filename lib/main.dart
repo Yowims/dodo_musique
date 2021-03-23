@@ -1,7 +1,12 @@
-import 'package:dodo_musique/pages/HomePage.dart';
+import 'package:dodo_musique/Views/HomePage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.black,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
   runApp(MyApp());
 }
 
@@ -27,9 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Dodo Musique',
-      theme: ThemeData(
-        primarySwatch: matBlack
-      ),
+      theme: ThemeData(primarySwatch: matBlack),
       home: MyHomePage(title: 'Dodo Musique'),
     );
   }
