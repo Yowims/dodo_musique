@@ -1,22 +1,24 @@
+import 'package:dodo_musique/Views/Components/AccessDenied.dart';
 import 'package:dodo_musique/Views/Components/WaitingIndicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class HomePageState extends State<HomePage> {
   Duration duration;
   Duration position;
   bool _isSearching = false;
+  bool accessDenied = false;
 
   TextEditingController musicTitleController = new TextEditingController();
   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
@@ -37,8 +39,12 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _isSearching = true;
     });
-    songs = await audioQuery.getSongs();
-    displayedSongs = songs;
+    try {
+      songs = await audioQuery.getSongs();
+      displayedSongs = songs;
+    } on PlatformException {
+      accessDenied = true;
+    }
 
     setState(() {
       _isSearching = false;
@@ -131,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
               audioPlugin.play(displayedSongs[index].filePath);
             },
             child: Card(
-              color: matBlack,
+              color: Theme.of(context).backgroundColor,
               elevation: 1,
               child: SizedBox(
                 height: 50,
@@ -168,7 +174,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     if (_isSearching == true) {
-      return WaitingIndicator();
+      return Material(
+        child: WaitingIndicator(),
+      );
+    }
+    if (accessDenied == true) {
+      return AccessDenied();
     } else {
       if (songs.length != 0) {
         return Material(

@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Dodo Musique',
-      theme: ThemeData(primarySwatch: matBlack),
-      home: MyHomePage(title: 'Dodo Musique'),
+      theme: ThemeData(primarySwatch: matBlack, backgroundColor: Colors.black),
+      home: HomePage(title: 'Dodo Musique'),
     );
   }
 }

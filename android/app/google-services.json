@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1012945205662",
+    "project_id": "dodo-musique",
+    "storage_bucket": "dodo-musique.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012945205662:android:69c05cfb560398bd767e8f",
+        "android_client_info": {
+          "package_name": "com.yowims.dodo_musique"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012945205662-qsbkuppimovrk1qt8al8loa52pl5l2cg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdXtMc3uF8rEeoJl25hbeSdvgAWT9l694"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012945205662-qsbkuppimovrk1qt8al8loa52pl5l2cg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
